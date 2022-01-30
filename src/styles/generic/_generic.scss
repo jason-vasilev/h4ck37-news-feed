@@ -1,0 +1,39 @@
+*,
+*::after,
+*::before {
+	/* paddings and borders not added to width and height,
+	force inheritance from body this is a better practice
+	because you can change the value anytime */
+	box-sizing: inherit;
+	margin: 0;
+	padding: 0;
+
+	font-weight: inherit;
+	font-size: inherit;
+}
+
+html {
+	font-size: 100%;
+}
+
+body {
+	box-sizing: border-box;
+	overflow-x: hidden;
+}
+
+fieldset {
+	margin: 0;
+	padding: 0;
+
+	border: 0;
+}
+
+button,
+input,
+select,
+label,
+textarea,
+a {
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0%);
+	-webkit-tap-highlight-color: transparent;
+}

@@ -1,0 +1,83 @@
+body {
+	color: $black;
+	font-size: rem($base-font-size);
+	line-height: em($base-line-height, $base-font-size);
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+a {
+	color: $primary;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+address,
+p,
+pre,
+blockquote,
+dl,
+dd,
+menu,
+ol,
+ul,
+table,
+caption,
+hr {
+	margin: 0;
+}
+
+h1,
+%h1,
+h2,
+%h2,
+h3,
+%h3,
+h4,
+%h4,
+h5,
+%h5,
+h6,
+%h6 {
+	font-weight: $font-weight-bold;
+}
+
+h1,
+%h1 {
+	font-size: rem(44);
+	line-height: em(48, 44);
+}
+
+h2,
+%h2 {
+	font-size: rem(40);
+	line-height: em(46, 40);
+}
+
+h3,
+%h3 {
+	font-size: rem(32);
+	line-height: em(36, 32);
+}
+
+h4,
+%h4 {
+	font-size: rem(28);
+	line-height: em(32, 28);
+}
+
+h5,
+%h5 {
+	font-size: rem(24);
+	line-height: em(30, 24);
+}
+
+h6,
+%h6 {
+	font-size: rem(24);
+	line-height: em(34, 24);
+}

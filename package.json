@@ -1,0 +1,51 @@
+{
+	"name": "h4ck37-news-feed",
+	"version": "0.1.0",
+	"private": true,
+	"dependencies": {
+		"@testing-library/jest-dom": "^5.14.1",
+		"@testing-library/react": "^12.0.0",
+		"@testing-library/user-event": "^13.2.1",
+		"@types/jest": "^27.0.1",
+		"@types/node": "^16.7.13",
+		"@types/react": "^17.0.20",
+		"@types/react-dom": "^17.0.9",
+		"react": "^17.0.2",
+		"react-dom": "^17.0.2",
+		"react-scripts": "5.0.0",
+		"sass": "^1.49.0",
+		"typescript": "^4.4.2",
+		"web-vitals": "^2.1.0"
+	},
+	"scripts": {
+		"start": "react-scripts start",
+		"build": "react-scripts build",
+		"test": "react-scripts test"
+	},
+	"eslintConfig": {
+		"extends": [
+			"react-app",
+			"react-app/jest"
+		]
+	},
+	"browserslist": {
+		"production": [
+			">0.2%",
+			"not dead",
+			"not op_mini all"
+		],
+		"development": [
+			"last 1 chrome version",
+			"last 1 firefox version",
+			"last 1 safari version"
+		]
+	},
+	"devDependencies": {
+		"stylelint": "^14.3.0",
+		"stylelint-config-rational-order": "^0.1.2",
+		"stylelint-config-standard": "^24.0.0",
+		"stylelint-order": "^5.0.0",
+		"stylelint-scss": "^4.1.0",
+		"stylelint-selector-bem-pattern": "^2.1.1"
+	}
+}

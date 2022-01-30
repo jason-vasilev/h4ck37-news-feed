@@ -1,0 +1,24 @@
+/* Colors */
+$primary: #4910b1;
+$secondary: #a04eff;
+$white: #fff;
+$black: #000;
+
+/* Typography related */
+$base-font-size: 16px;
+$base-line-height: 24px;
+
+$font-weight-regular: 400;
+$font-weight-bold: 700;
+
+/* Media queries */
+$sm: 35.5rem; /* mobile = 568px */
+$md: 48rem; /* tablet = 768px */
+$lg: 64rem; /* tablet portrait = 1024px */
+$xlg: 80rem; /* desktop = 1280px */
+
+$sm-up-layout: 'only screen and (min-width: #{$sm})'; /* min 568 and up */
+$md-layout: 'only screen and (min-width: #{$sm}) and (max-width: 1023px)'; /* between 768 and 1024 */
+$md-up-layout: 'only screen and (min-width: #{$md})'; /* min 768 and up */
+$lg-layout: 'only screen and (min-width: #{$lg}) and (max-width: #{$xlg})'; /* between 1024 and 1200 */
+$lg-up-layout: 'only screen and (min-width: #{$lg})'; /* min 1024 and up */

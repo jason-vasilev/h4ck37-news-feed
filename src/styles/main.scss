@@ -1,0 +1,8 @@
+/* Main project stylesheet combiner */
+
+/* Generic styling of base elements */
+@import 'generic/normalize';
+@import 'generic/vars';
+@import 'generic/mixins';
+@import 'generic/generic';
+@import 'generic/typography';
