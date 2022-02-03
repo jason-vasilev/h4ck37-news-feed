@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
+import NewsFeed from './NewsFeed/NewsFeed';
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
 	<React.StrictMode>
-		<App />
+		<NewsFeed />
 	</React.StrictMode>,
 	document.getElementById('root')
 );
