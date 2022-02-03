@@ -5,6 +5,7 @@ import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
 	<React.StrictMode>
+		<h1>Lorem ipsum dolor sit.</h1>
 		<NewsFeed />
 	</React.StrictMode>,
 	document.getElementById('root')

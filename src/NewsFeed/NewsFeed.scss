@@ -1,5 +1,14 @@
 @import '../styles/main';
 
-.app-logo {
-	width: rem(130);
+.news-feed {
+	position: inherit;
+
+	&__headline {
+		text-transform: uppercase;
+	}
+
+	&__wrapper {
+		display: flex;
+		flex-flow: wrap row;
+	}
 }
