@@ -1,67 +1,70 @@
+import React from 'react';
 import './NewsFeed.scss';
-/* import NewsCard from '../NewsCard/NewsCard'; */
+import NewsCard from '../NewsCard/NewsCard';
 
-function getRandom(arr: string, n: number) {
-	const result = new Array(n);
-	let len = arr.length;
-	const taken = new Array(len);
-
-	if (n > len) {
-		throw new RangeError('getRandom: more elements taken than available');
+class NewsFeed extends React.Component<{}, { randomStories: any, hasLoaded: boolean }> {
+	constructor(props : any) {
+		super(props);
+   
+		this.state = {
+			randomStories: [],
+			hasLoaded: false
+		};
 	}
 	
-	/* TODO: figure why it executes twice */
-	while (n--) {
-		const x = Math.floor(Math.random() * len);
-		result[n] = arr[x in taken ? taken[x] : x];
-		taken[x] = --len in taken ? taken[len] : len;
+	componentDidMount() {
+		fetch ('https://hacker-news.firebaseio.com/v0/topstories.json')
+		.then(response => response.json())
+		.then(data => {
+			this.setState({
+				randomStories: this.getRandom(data, 10),
+				hasLoaded: true
+			});
+		});
 	}
 
-	return result;
-}
-
-function NewsFeed() {
-	let randomStories : any;
-
-	fetch ('https://hacker-news.firebaseio.com/v0/topstories.json')
-	.then(response => response.json())
-	.then(data => {
-		randomStories = getRandom(data, 10);
-	});
+	getRandom(arr: string, n: number) {
+		/* How to get a number of random elements from an array? */
+		/* https://stackoverflow.com/a/19270021/1121986 */
+		const result = new Array(n);
+		let len = arr.length;
+		const taken = new Array(len);
 	
-	return (
-		<section className='news-feed'>
-			<h2 className='news-feed__headline'>Top Random Stories <span>(by karma points)</span></h2>
+		if (n > len) {
+			throw new RangeError('getRandom: more elements taken than available');
+		}
+		
+		while (n--) {
+			const x = Math.floor(Math.random() * len);
+			result[n] = arr[x in taken ? taken[x] : x];
+			taken[x] = --len in taken ? taken[len] : len;
+		}
+		
+		return result;
+	}
 
-			<div className="news-feed__wrapper">
-				{/* <NewsCard /> */}
-				
-				{randomStories && (
-					randomStories.map((randomStory : object) => {
-						return (
-							<div className='news-card'>
-								<img src='http://placekitten.com/g/300/200' className='news-card__story-img' alt='Kitten' />
-								<h3>
-									<a
-										href={`https://hacker-news.firebaseio.com/v0/item/${randomStory}.json`}
-										target='_blank'
-										rel='noopener noreferrer'
-									>
-										Story title
-									</a>
-								</h3>
-								<p>By <span className='news-card__author'><a href='#.#' target='_blank' rel='noopener noreferrer'>Johnny Bravo</a></span><span className='news-card__author-points'>(11,174)</span></p>
-								<p>Published <span className='news-card__date'>2 hours ago</span></p>
-							</div>
-						);
-					})
-				)}
-				{!randomStories && (
-					<h3>Something iis fishy</h3>
-				)}
-			</div>
-		</section>
-	);
+	render() {
+		const { hasLoaded, randomStories } = this.state;
+        
+		if (!hasLoaded) {
+			return <p>Loading... </p>
+		};
+
+		return (
+			<section className='news-feed'>
+				<h2 className='news-feed__headline'>Top Random Stories <span>(by karma points)</span></h2>
+
+				<div className="news-feed__wrapper">
+					
+					{randomStories && (
+						randomStories.map((item : object, index : any) => {
+							return <NewsCard key={item} cardId={item} />;
+						})
+					)}
+				</div>
+			</section>
+		);
+	}
 }
 
 export default NewsFeed;
