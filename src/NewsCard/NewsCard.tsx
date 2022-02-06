@@ -6,15 +6,40 @@ function NewsCard(props: any) {
 		cardInfo,
 	} = props;
 
-	const [authorKarma, setauthorKarma] = useState('');
+	const [authorKarma, setAuthorKarma] = useState('');
 
+	const realTime = (postTime: number) => {
+		var unixTimeNow = Math.round(Date.now() / 1000);
+		const timeDiff = unixTimeNow - postTime; /* in seconds */
+
+		const days = Math.floor((timeDiff / (60 * 60 * 24)));
+		const hours = Math.floor((timeDiff / (60 * 60)) % 24);
+		const minutes = Math.floor((timeDiff / 60) % 60);
+
+		if (days > 0) {
+			return `${days} days ago`;
+		}
+
+		if (hours > 0) {
+			return `${hours} hours ago`;
+		}
+
+		if (minutes > 5) {
+			return  `${minutes} minutes ago`;
+		} else {
+			return ` just few minutes ago`;
+		}
+	}
+
+	const timeAgo = realTime(cardInfo.time);
+
+	/* get author karma points */
 	const onMouseOverHandle = () => {
 		fetch(`https://hacker-news.firebaseio.com/v0/user/${cardInfo.by}.json`)
 		.then(response => response.json())
 		.then(
 			(data) => {
-				console.log(data.karma);
-				setauthorKarma(`${data.karma} karma`);
+				setAuthorKarma(`${data.karma} karma`);
 			},
 			(error) => {
 				console.log('Could not get author karma points', error);
@@ -45,8 +70,17 @@ function NewsCard(props: any) {
 					{cardInfo.by}
 				</a>
 				
-				</span><span className='news-card__author-points'>SCORE: {cardInfo.score}</span></p>
-			<p>Published <span className='news-card__date'>{cardInfo.time}</span></p>
+				</span>
+				
+				{cardInfo.score && (
+					<span className='news-card__author-points'>SCORE: {cardInfo.score}</span>
+				)}
+			</p>
+				
+			{timeAgo && (
+				<p>Published <span className='news-card__date'>{timeAgo}</span></p>
+			)}
+			
 		</div>
 	);
 }
