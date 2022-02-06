@@ -39,13 +39,13 @@ class NewsFeed extends React.Component<{}, { randomStories: any, hasLoaded: bool
 			result[n] = arr[x in taken ? taken[x] : x];
 			taken[x] = --len in taken ? taken[len] : len;
 		}
-		
+
 		return result;
 	}
 
 	render() {
 		const { hasLoaded, randomStories } = this.state;
-        
+
 		if (!hasLoaded) {
 			return <p>Loading... </p>
 		};
