@@ -34,7 +34,7 @@ class NewsFeed extends React.Component<{}, { randomStories: any, hasLoaded: numb
 	}
 	
 	componentDidMount() {
-		fetch ('https://hacker-news.firebaseio.com/v0/topstories.json')
+		fetch('https://hacker-news.firebaseio.com/v0/topstories.json')
 		.then(response => response.json())
 		.then(
 			(data) => {
@@ -69,12 +69,11 @@ class NewsFeed extends React.Component<{}, { randomStories: any, hasLoaded: numb
 		.then((randomStoriesContent) => {
 			/* timing/sequence issue - doesn't sort */
 			this.randomStoriesContent.sort((a,b) => (a.score < b.score) ? 1 : ((b.score < a.score) ? -1 : 0));
-			console.log(this.randomStoriesContent);
 		});
 	}
 
 	render() {
-		const { hasLoaded, randomStories } = this.state;
+		const { hasLoaded } = this.state;
 
 		if (!hasLoaded) {
 			return <p>Loading... </p>
@@ -85,12 +84,15 @@ class NewsFeed extends React.Component<{}, { randomStories: any, hasLoaded: numb
 		return (
 			<section className='news-feed'>
 				<h2 className='news-feed__headline'>Top Random Stories <span>(by karma points)</span></h2>
-
 				<div className="news-feed__wrapper">
-					
-					{randomStories && (
-						randomStories.map((item : object, index : any) => {
-							return <NewsCard key={item} cardId={item} />;
+					{this.randomStoriesContent && (
+						this.randomStoriesContent.map((item : any) => {
+							return (
+								<NewsCard
+									key={item.id}
+									cardInfo={item}
+								/>
+							)
 						})
 					)}
 				</div>
