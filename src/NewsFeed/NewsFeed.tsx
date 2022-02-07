@@ -34,6 +34,7 @@ class NewsFeed extends React.Component<{}, { randomStories: any, hasLoaded: numb
 	}
 	
 	componentDidMount() {
+		/* besides stories, occasionally, there are a poll or two */
 		fetch('https://hacker-news.firebaseio.com/v0/topstories.json')
 		.then(response => response.json())
 		.then(
@@ -48,7 +49,7 @@ class NewsFeed extends React.Component<{}, { randomStories: any, hasLoaded: numb
 				});
 			},
 			(error) => {
-				console.log('Ooops! ', error);
+				console.log('Error! Could not get top stories. ', error);
 			}
 		)
 		.then((randomStoriesData) => {
@@ -61,7 +62,7 @@ class NewsFeed extends React.Component<{}, { randomStories: any, hasLoaded: numb
 						this.randomStoriesContent.push(data);
 					},
 					(error) => {
-						console.log('Ooops! ', error);
+						console.log('Error! Could not get data of stories. ', error);
 					}
 				);
 			});
@@ -83,8 +84,12 @@ class NewsFeed extends React.Component<{}, { randomStories: any, hasLoaded: numb
 
 		return (
 			<section className='news-feed'>
-				<h2 className='news-feed__headline'>Top Random Stories <span>(by karma points)</span></h2>
-				<div className="news-feed__wrapper">
+				<header className='news-feed__header'>
+					<h2 className='news-feed__headline'>Section title</h2>
+					<p className='news-feed__tagline'>Section tagline / description</p>
+				</header>
+
+				<div className='news-feed__wrapper'>
 					{this.randomStoriesContent && (
 						this.randomStoriesContent.map((item : any) => {
 							return (

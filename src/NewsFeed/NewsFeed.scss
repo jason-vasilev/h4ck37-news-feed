@@ -3,12 +3,13 @@
 .news-feed {
 	position: inherit;
 
-	&__headline {
-		text-transform: uppercase;
+	&__header {
+		margin-bottom: rem(32);
 	}
 
 	&__wrapper {
 		display: flex;
 		flex-flow: wrap row;
+		justify-content: space-between;
 	}
 }

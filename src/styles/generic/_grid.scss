@@ -1,0 +1,11 @@
+.container {
+	max-width: 1024px;
+	margin: 0 auto;
+	padding-right: rem(16);
+	padding-left: rem(16);
+
+	@media #{$sm-up-layout} {
+		padding-right: rem(32);
+		padding-left: rem(32);
+	}
+}

@@ -1,5 +1,3 @@
-/* eslint-disable quote-props */
-
 module.exports = {
 	extends: [
 		'stylelint-config-standard',

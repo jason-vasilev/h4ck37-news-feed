@@ -1,6 +1,7 @@
 body {
 	color: $black;
 	font-size: rem($base-font-size);
+	font-family: Calibri, 'Trebuchet MS', sans-serif;
 	line-height: em($base-line-height, $base-font-size);
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
@@ -44,12 +45,14 @@ h5,
 h6,
 %h6 {
 	font-weight: $font-weight-bold;
+	word-break: break-word;
 }
 
 h1,
 %h1 {
 	font-size: rem(44);
 	line-height: em(48, 44);
+	text-transform: uppercase;
 }
 
 h2,
@@ -60,6 +63,6 @@ h2,
 
 h3,
 %h3 {
-	font-size: rem(32);
-	line-height: em(36, 32);
+	font-size: rem(24);
+	line-height: em(32, 24);
 }

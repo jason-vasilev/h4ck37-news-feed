@@ -1,5 +1,97 @@
 @import '../styles/main';
 
 .news-card {
+	margin-bottom: rem(32);
+	padding: 0 rem(16) rem(16);
+	border: 1px solid grey;
 	position: relative;
+
+	width: 100%;
+
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: column;
+	justify-content: space-between;
+	
+	@media #{$md-up-layout} {
+		width: calc(50% - 1rem);
+	}		
+
+	@media #{$lg-up-layout} {
+		width: calc(33.333% - 1rem);
+	}
+
+	&__media {
+		position: relative;
+		display: flex;
+		overflow: hidden;
+
+		height: 0;
+		margin-bottom: rem(16);
+		margin-right: rem(-16);
+		margin-left: rem(-16);
+		padding-top: 56.25%;
+	}
+
+	&__picture {
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		display: block;
+	}
+
+	&__image {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	&__content {
+		display: flex;
+		flex-direction: column;
+		flex-wrap: wrap;
+		flex-grow: 1;
+		justify-content: space-between;
+	}
+
+	&__title {
+		@extend %line-clamp;
+		margin-bottom: rem(16);
+		overflow: hidden;
+	}
+
+	&__title-link {
+		display: block;
+		text-decoration: none;
+		
+		&::after {
+			width: 100%;
+			height: 100%;
+			position: absolute;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			left: 0;
+			z-index: -1;
+
+			background-color: grey;
+
+			content: '';
+
+			background: $white;
+			transition: background-color 0.25s ease-in;
+		}
+
+		&:hover,
+		&:focus {
+			outline: 0;
+			color: $white;
+
+			&::after {
+				background: #1dbb9e; /* TODO: need something more funky */
+			}
+		}
+	}
 }
