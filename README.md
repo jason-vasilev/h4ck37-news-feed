@@ -1,30 +1,17 @@
-# H4ck37 News Feed
+## H4ck37 News Feed
 
-Build on create-react-app using Typescript and SCSS
+Running on create-react-app with Typescript and SCSS.\
+Preview at [https://h4ck37-news-feed.herokuapp.com/](h4ck37-news-feed.herokuapp.com)
 
-## Available Scripts
+`yarn i` - install
 
-In the project directory, you can run:
+`yarn start` - run in dev mode - opens [http://localhost:3000](http://localhost:3000)
 
-### `yarn start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `yarn test`
-
-Launches the test runner in the interactive watch mode.\
+`yarn test` - Launches the test runner in the interactive watch mode.\
 See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `yarn build`
-
-Builds the app for production to the `build` folder.\
+`yarn build` - builds the app for production to the `build` folder.\
 It correctly bundles React in production mode and optimizes the build for the best performance.
 
 The build is minified and the filenames include the hashes.\
 Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.

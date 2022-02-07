@@ -59,13 +59,13 @@ function NewsCard(props: any) {
 				<picture className='news-card__picture'>
 					{/* in an optimal case there will be source sets for webp, too */}
 					<source
-					 	media="(max-width: 768px)"
+					 	media='(max-width: 768px)'
 						srcSet={`https://picsum.photos/seed/D4-${imageId(cardInfo.id)}/640/360,
 								https://picsum.photos/seed/D4-${imageId(cardInfo.id)}/1280/720 2x`}
 						type='image/jpeg'
 					/>
 					<source
-					 	media="(min-width: 769px)"
+					 	media='(min-width: 769px)'
 						srcSet={`https://picsum.photos/seed/D4-${imageId(cardInfo.id + 1)}/640/360,
 								https://picsum.photos/seed/D4-${imageId(cardInfo.id + 1)}/1280/720 2x`}
 						type='image/jpeg'
@@ -77,24 +77,30 @@ function NewsCard(props: any) {
 						height='360'
 						className='news-card__image'
 						alt='4 kittens in a picnic basket'
+						loading='lazy'
 					/>
 				</picture>
 			</figure>
 
-			<div className="news-card__content">
+			<div className='news-card__content'>
 				<h3 className='news-card__title'>
-					<a
-						className='news-card__title-link'
-						href={cardInfo.url}
-						target='_blank'
-						rel='noopener noreferrer'
-						title={cardInfo.title}
-					>
-						{cardInfo.title}
-					</a>
+					{cardInfo.url && (
+						<a
+							className='news-card__title-link'
+							href={cardInfo.url}
+							target='_blank'
+							rel='noopener noreferrer'
+							title={cardInfo.title}
+							>
+							{cardInfo.title}
+						</a>
+					)}
+					{!cardInfo.url && (
+						cardInfo.title
+					)}
 				</h3>
 
-				<div className="news-card__meta-content">
+				<div className='news-card__meta-content'>
 					<p>By <span className='news-card__author'>
 						<a
 							href={`https://news.ycombinator.com/user?id=${cardInfo.by}`}
