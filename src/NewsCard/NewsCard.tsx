@@ -77,7 +77,6 @@ function NewsCard(props: any) {
 						height='360'
 						className='news-card__image'
 						alt='4 kittens in a picnic basket'
-						loading='lazy'
 					/>
 				</picture>
 			</figure>
