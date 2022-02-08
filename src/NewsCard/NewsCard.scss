@@ -1,36 +1,62 @@
 @import '../styles/main';
 
 .news-card {
-	margin-bottom: rem(32);
-	padding: 0 rem(16) rem(16);
-	border: 1px solid grey;
 	position: relative;
 
-	width: 100%;
-
 	display: flex;
-	flex-wrap: wrap;
-	flex-direction: column;
+	flex-flow: wrap column;
 	justify-content: space-between;
-	
+	width: 100%;
+	margin-bottom: rem(32);
+	padding: 0 rem(16) rem(16);
+
+	background-color: $white;
+	border: 1px dotted rgba($primary, 0.8);
+
 	@media #{$md-up-layout} {
 		width: calc(50% - 1rem);
-	}		
+	}
 
 	@media #{$lg-up-layout} {
 		width: calc(33.333% - 1rem);
 	}
 
+	&::before,
+	&::after {
+		position: absolute;
+		top: 80%;
+		bottom: 25px;
+		left: 10px;
+		z-index: -1;
+
+		width: 50%;
+		max-width: 300px;
+
+		background: rgba($primary, 0.3);
+		box-shadow: 0 35px 20px rgba($primary, 0.3);
+		transform: rotate(-8deg);
+
+		content: '';
+	}
+
+	&::after {
+		right: 10px;
+		left: auto;
+
+		transform: rotate(8deg);
+	}
+
+
 	&__media {
 		position: relative;
-		display: flex;
-		overflow: hidden;
 
+		display: flex;
 		height: 0;
-		margin-bottom: rem(16);
 		margin-right: rem(-16);
+		margin-bottom: rem(16);
 		margin-left: rem(-16);
 		padding-top: 56.25%;
+		overflow: hidden;
 	}
 
 	&__picture {
@@ -39,6 +65,7 @@
 		right: 0;
 		bottom: 0;
 		left: 0;
+
 		display: block;
 	}
 
@@ -50,8 +77,7 @@
 
 	&__content {
 		display: flex;
-		flex-direction: column;
-		flex-wrap: wrap;
+		flex-flow: wrap column;
 		flex-grow: 1;
 		justify-content: space-between;
 	}
@@ -63,35 +89,48 @@
 	}
 
 	&__title-link {
-		display: block;
 		text-decoration: none;
-		
-		&::after {
-			width: 100%;
-			height: 100%;
-			position: absolute;
-			top: 0;
-			right: 0;
-			bottom: 0;
-			left: 0;
-			z-index: -1;
 
-			background-color: grey;
+		background:
+			linear-gradient(
+				to bottom,
+				$primary 0%,
+				$primary 100%
+			);
+		background-repeat: repeat-x;
+		background-position: 0 100%;
+		background-size: 1px 1px;
 
-			content: '';
-
-			background: $white;
-			transition: background-color 0.25s ease-in;
-		}
+		transition: all 0.2s;
 
 		&:hover,
 		&:focus {
-			outline: 0;
 			color: $white;
 
-			&::after {
-				background: #1dbb9e; /* TODO: need something more funky */
-			}
+			background-size: 4px 50px;
+		}
+	}
+
+	&__points {
+		position: absolute;
+		right: 0;
+		bottom: 0;
+		z-index: 2;
+
+		padding: 2px rem(6);
+
+		background: $white;
+		border-radius: rem(4px) 0 0;
+	}
+
+	&__author-link {
+		padding: rem(4);
+
+		&:hover,
+		&:focus {
+			color: $white;
+
+			background-color: $primary;
 		}
 	}
 }

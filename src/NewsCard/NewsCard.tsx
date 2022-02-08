@@ -8,16 +8,18 @@ function NewsCard(props: any) {
 
 	const [authorKarma, setAuthorKarma] = useState('');
 
-	const realTime = (postTime: number) => {
+	const timeSince = (postTime: number) => {
 		var unixTimeNow = Math.round(Date.now() / 1000);
 		const timeDiff = unixTimeNow - postTime; /* in seconds */
 
-		const days = Math.floor((timeDiff / (60 * 60 * 24)));
+		const days = Math.floor(timeDiff / (60 * 60 * 24));
 		const hours = Math.floor((timeDiff / (60 * 60)) % 24);
 		const minutes = Math.floor((timeDiff / 60) % 60);
 
-		if (days > 0) {
+		if (days > 1) {
 			return `${days} days ago`;
+		} else if (days > 0) {
+			return `${days} day ago`;
 		}
 
 		if (hours > 0) {
@@ -37,9 +39,9 @@ function NewsCard(props: any) {
 		return String(id)[idLength - 1];
 	}
 
-	const timeAgo = realTime(cardInfo.time);
+	const timeAgo = timeSince(cardInfo.time);
 
-	/* get author karma points */
+	/* get author karma points on author link hover */
 	const onMouseOverHandle = () => {
 		fetch(`https://hacker-news.firebaseio.com/v0/user/${cardInfo.by}.json`)
 		.then(response => response.json())
@@ -79,6 +81,9 @@ function NewsCard(props: any) {
 						alt='4 kittens in a picnic basket'
 					/>
 				</picture>
+				{cardInfo.score && (
+					<span className='news-card__points'> SCORE: {cardInfo.score}</span>
+				)}
 			</figure>
 
 			<div className='news-card__content'>
@@ -94,33 +99,31 @@ function NewsCard(props: any) {
 							{cardInfo.title}
 						</a>
 					)}
+					{/* Don't wrap with a link tag if the story type is a poll */}
 					{!cardInfo.url && (
 						cardInfo.title
 					)}
 				</h3>
 
 				<div className='news-card__meta-content'>
-					<p>By <span className='news-card__author'>
-						<a
-							href={`https://news.ycombinator.com/user?id=${cardInfo.by}`}
-							target='_blank'
-							rel='noopener noreferrer'
-							title={authorKarma}
-							onMouseOver={onMouseOverHandle}
-						>
-							{cardInfo.by}
-						</a>
-						
+					<p>By 
+						<span className='news-card__author'>
+							<a
+								href={`https://news.ycombinator.com/user?id=${cardInfo.by}`}
+								target='_blank'
+								rel='noopener noreferrer'
+								title={authorKarma}
+								className='news-card__author-link'
+								onMouseOver={onMouseOverHandle}
+							>
+								{cardInfo.by}
+							</a>
 						</span>
-						
-						{cardInfo.score && (
-							<span className='news-card__author-points'> SCORE: {cardInfo.score}</span>
+
+						{timeAgo && (
+							<span className='news-card__date'> {timeAgo}</span>
 						)}
 					</p>
-						
-					{timeAgo && (
-						<p>Published <span className='news-card__date'>{timeAgo}</span></p>
-					)}
 				</div>
 			</div>
 		</div>
