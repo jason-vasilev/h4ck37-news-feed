@@ -37,40 +37,40 @@ class NewsFeed extends React.Component<{}, { randomStories: any, hasLoaded: numb
 		/* besides stories, occasionally, there are a poll or two */
 		fetch('https://hacker-news.firebaseio.com/v0/topstories.json')
 		.then(response => response.json())
-		.then(
-			(data) => {
-				this.setState({
-					randomStories: this.getRandom(data, 10),
-					hasLoaded: 1
-				});
+		.then((data) => {
+			this.setState({
+				randomStories: this.getRandom(data, 10),
+				hasLoaded: 1
+			});
 
-				this.randomStoriesData = this.state.randomStories.map((storyId: string) => {
-					return `https://hacker-news.firebaseio.com/v0/item/${storyId}.json`;
-				});
-			},
-			(error) => {
-				console.log('Error! Could not get top stories. ', error);
-			}
-		)
+			this.randomStoriesData = this.state.randomStories.map((storyId: string) => {
+				return `https://hacker-news.firebaseio.com/v0/item/${storyId}.json`;
+			});
+		},
+		(error) => {
+			console.log('Error! Could not get top stories. ', error);
+		})
 		.then((randomStoriesData) => {
 			Object.entries(this.randomStoriesData).forEach((value: any) => {
 				fetch(value[1])
 				.then(response => response.json())
 				.then(
 					(data) => {
-						this.setState({ hasLoaded: 2 });
 						this.randomStoriesContent.push(data);
 					},
 					(error) => {
 						console.log('Error! Could not get data of stories. ', error);
 					}
-				);
+				)
+				.then((randomStoriesContent) => {
+					this.randomStoriesContent.sort((a,b) => (a.score < b.score) ? 1 : ((b.score < a.score) ? -1 : 0));
+					this.setState({ hasLoaded: 2 });
+				},
+				(error) => {
+					console.log('Could not sort stories. ', error);
+				});
 			});
 		})
-		.then((randomStoriesContent) => {
-			/* timing/sequence issue - doesn't sort */
-			this.randomStoriesContent.sort((a,b) => (a.score < b.score) ? 1 : ((b.score < a.score) ? -1 : 0));
-		});
 	}
 
 	render() {
@@ -85,8 +85,8 @@ class NewsFeed extends React.Component<{}, { randomStories: any, hasLoaded: numb
 		return (
 			<section className='news-feed'>
 				<header className='news-feed__header'>
-					<h2 className='news-feed__headline'>Section title</h2>
-					<p className='news-feed__tagline'>Section tagline / description</p>
+					<h2>Section title</h2>
+					<p>Section tagline / description</p>
 				</header>
 
 				<div className='news-feed__wrapper'>
