@@ -42,7 +42,7 @@ function NewsCard(props: any) {
 	const timeAgo = timeSince(cardInfo.time);
 
 	/* get author karma points on author link hover */
-	const onMouseOverHandle = () => {
+	const getKarmaPoints = () => {
 		fetch(`https://hacker-news.firebaseio.com/v0/user/${cardInfo.by}.json`)
 		.then(response => response.json())
 		.then(
@@ -114,7 +114,8 @@ function NewsCard(props: any) {
 								rel='noopener noreferrer'
 								title={authorKarma}
 								className='news-card__author-link'
-								onMouseOver={onMouseOverHandle}
+								onMouseOver={getKarmaPoints}
+								onFocus={getKarmaPoints}
 							>
 								{cardInfo.by}
 							</a>

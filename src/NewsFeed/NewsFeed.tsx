@@ -2,7 +2,7 @@ import React from 'react';
 import './NewsFeed.scss';
 import NewsCard from '../NewsCard/NewsCard';
 
-class NewsFeed extends React.Component<{}, { randomStories: any, hasLoaded: number }> {
+class NewsFeed extends React.Component<{}, { randomStories: any[], hasLoaded: number }> {
 	randomStoriesData: any;
 	randomStoriesContent: any[] = [];
 	constructor(props : any) {
