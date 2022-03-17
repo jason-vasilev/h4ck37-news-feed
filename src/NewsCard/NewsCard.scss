@@ -25,27 +25,26 @@
 	&::after {
 		position: absolute;
 		top: 80%;
-		bottom: 25px;
-		left: 10px;
+		bottom: rem(25);
+		left: rem(10);
 		z-index: -1;
 
 		width: 50%;
-		max-width: 300px;
+		max-width: rem(300);
 
 		background: rgba($primary, 0.3);
-		box-shadow: 0 35px 20px rgba($primary, 0.3);
+		box-shadow: 0 rem(35) rem(20) rgba($primary, 0.3);
 		transform: rotate(-8deg);
 
 		content: '';
 	}
 
 	&::after {
-		right: 10px;
+		right: rem(10);
 		left: auto;
 
 		transform: rotate(8deg);
 	}
-
 
 	&__media {
 		position: relative;
@@ -107,7 +106,7 @@
 		&:focus {
 			color: $white;
 
-			background-size: 4px 50px;
+			background-size: rem(4) rem(50);
 		}
 	}
 
@@ -117,10 +116,10 @@
 		bottom: 0;
 		z-index: 2;
 
-		padding: 2px rem(6);
+		padding: rem(2) rem(6);
 
 		background: $white;
-		border-radius: rem(4px) 0 0;
+		border-radius: rem(4) 0 0;
 	}
 
 	&__author-link {
