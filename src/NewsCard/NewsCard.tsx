@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import "./NewsCard.scss";
 
+import { NewsFeedStory } from "../types";
+
+
 function NewsCard(props: any) {
   const { cardInfo } = props;
 
