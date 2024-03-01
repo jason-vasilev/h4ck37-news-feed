@@ -2,6 +2,15 @@ import React from 'react';
 import './NewsFeed.scss';
 import NewsCard from '../NewsCard/NewsCard';
 
+interface NewsFeedStory {
+  text: string;
+  score: number;
+  time: number;
+  title: string;
+  type: string;
+  id: number;
+}
+
 class NewsFeed extends React.Component<{}, { randomStories: any[], hasLoaded: number }> {
 	randomStoriesData: any;
 	randomStoriesContent: any[] = [];
