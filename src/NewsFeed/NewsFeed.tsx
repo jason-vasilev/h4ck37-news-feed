@@ -55,12 +55,12 @@ class NewsFeed extends React.Component<
             }
           );
         },
-          (error) => {
-            console.log("Error! Could not get top stories. ", error);
-          };
+        (error) => {
+          console.log("Error! Could not get top stories. ", error);
+        }
       )
       .then((randomStoriesData) => {
-        Object.entries(this.randomStoriesData).forEach((value: any) => {
+        Object.entries(this.randomStoriesData).forEach((value: string[]) => {
           fetch(value[1])
             .then((response) => response.json())
             .then(
@@ -104,7 +104,7 @@ class NewsFeed extends React.Component<
 
         <div className="news-feed__wrapper">
           {this.randomStoriesContent &&
-            this.randomStoriesContent.map((item: any) => {
+            this.randomStoriesContent.map((item: NewsFeedStory) => {
               return <NewsCard key={item.id} cardInfo={item} />;
             })}
         </div>
