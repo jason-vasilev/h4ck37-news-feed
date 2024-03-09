@@ -5,33 +5,11 @@ import NewsCard from "../NewsCard/NewsCard";
 import { NewsFeedStory } from "../types";
 
 function NewsFeed() {
-  //   {},
-  //   { randomStories: string[]; hasLoaded: number }
-  // > {
-  //   randomStoriesData: string[] = [];
-  //   randomStoriesContent: NewsFeedStory[] = [];
-  //   constructor(props: any) {
-  //     super(props);
-
-  //     this.state = {
-  //       randomStories: [],
-  //       hasLoaded: 0,
-  //     };
-  //   }
-
-  interface Story {
-    [key: number]: string;
-  }
-
-  let [randomStories, setRandomStories] = useState<string[]>([]);
   let [hasLoaded, setLoading] = useState(0);
   let [randomStoriesData, setRandomStoriesData] = useState<string[]>([]);
 
-  // let randomStoriesData: string[] = [];
-
-  const randomStoriesContent: NewsFeedStory[] = [];
-
-  let storyUrls: string[]; // TODO test
+  let randomStoriesContent: NewsFeedStory[] = [];
+  let storyUrls: string[];
 
   /* Get a number of random elements from an array */
   /* https://stackoverflow.com/a/19270021/1121986 */
@@ -66,8 +44,8 @@ function NewsFeed() {
           });
 
           setLoading(1);
-          setRandomStories(randomStoryIds);
-          // setRandomStoriesData(storyUrls);
+          // setRandomStories(randomStoryIds);
+          setRandomStoriesData(storyUrls);
           randomStoriesData = storyUrls;
         },
         (error) => {
@@ -84,8 +62,8 @@ function NewsFeed() {
                 return randomStoriesContent;
               },
               (error) => {
-                console.log("Error! Could not get data of stories. ", error);
-                return randomStoriesContent; // Return the array as-is
+                console.log("Error! Could not collect stories. ", error);
+                return randomStoriesContent; // return as-is
               }
             );
         });
@@ -93,18 +71,14 @@ function NewsFeed() {
         return Promise.all(promises); // Wait for all fetch operations to complete
       })
       .then(
-        (randomStoriesContent): void => {
-          // Object.entries(randomStoriesContent);
-          // console.log(typeof randomStoriesContent);
-
-          console.log("BEFORE: ", randomStoriesContent[0]);
-
-          randomStoriesContent[0].sort((a: NewsFeedStory, b: NewsFeedStory) =>
+        () => {
+          // supposed to sort stories by highest score
+          randomStoriesContent.sort((a: NewsFeedStory, b: NewsFeedStory) =>
             a.score < b.score ? 1 : b.score < a.score ? -1 : 0
           );
-          setLoading(2);
 
-          console.log("AFTER: ", randomStoriesContent[0]);
+          console.log("After sort: ", randomStoriesContent);
+          setLoading(2);
         },
         (error) => {
           console.log("Could not sort stories. ", error);
@@ -125,17 +99,12 @@ function NewsFeed() {
         <p>Section tagline / description</p>
       </header>
 
-      <p>START</p>
-
-      <p>{hasLoaded && hasLoaded}</p>
-      <p>END</p>
-
-      {/* <div className="news-feed__wrapper">
+      <div className="news-feed__wrapper">
         {randomStoriesContent &&
-          randomStoriesContent.map((item: NewsFeedStory) => {
-            return <NewsCard key={item.id} cardInfo={item} />;
+          randomStoriesContent.map((story: NewsFeedStory) => {
+            return <NewsCard key={story.id} cardInfo={story} />;
           })}
-      </div> */}
+      </div>
     </section>
   );
 }
