@@ -5,11 +5,15 @@ import NewsCard from "../NewsCard/NewsCard";
 import { NewsFeedStory } from "../types";
 
 function NewsFeed() {
-  let [hasLoaded, setLoading] = useState(0);
-  let [randomStoriesData, setRandomStoriesData] = useState<string[]>([]);
-
-  let randomStoriesContent: NewsFeedStory[] = [];
-  let storyUrls: string[];
+  /*
+   * change loading message depending on value
+   * 0 - Loading...
+   * 1 - Almost there
+   * 2 - show content
+   */
+  let [isLoading, setLoading] = useState(2);
+  let [randomStoriesData] = useState<string[]>([]);
+  let [randomStoriesContent] = useState<NewsFeedStory[]>([]);
 
   /* Get a number of random elements from an array */
   /* https://stackoverflow.com/a/19270021/1121986 */
@@ -36,16 +40,14 @@ function NewsFeed() {
       .then((response) => response.json())
       .then(
         (data) => {
-          const randomStoryIds: string[] = getRandom(data, 10); // Assuming getRandom returns an array of story IDs as strings
+          const randomStoryIds: string[] = getRandom(data, 10); // get an array of 10 story IDs as strings
 
-          // Construct URLs from story IDs
-          storyUrls = randomStoryIds.map((storyId: string) => {
+          // Construct URLs with the randomStoryIds
+          const storyUrls: string[] = randomStoryIds.map((storyId: string) => {
             return `https://hacker-news.firebaseio.com/v0/item/${storyId}.json`;
           });
 
-          setLoading(1);
-          // setRandomStories(randomStoryIds);
-          setRandomStoriesData(storyUrls);
+          setLoading(1); // let user know something is happening
           randomStoriesData = storyUrls;
         },
         (error) => {
@@ -72,13 +74,12 @@ function NewsFeed() {
       })
       .then(
         () => {
-          // supposed to sort stories by highest score
+          // sort stories by highest score
           randomStoriesContent.sort((a: NewsFeedStory, b: NewsFeedStory) =>
             a.score < b.score ? 1 : b.score < a.score ? -1 : 0
           );
 
-          console.log("After sort: ", randomStoriesContent);
-          setLoading(2);
+          setLoading(0);
         },
         (error) => {
           console.log("Could not sort stories. ", error);
@@ -86,17 +87,16 @@ function NewsFeed() {
       );
   }, []); // Empty dependency array to run effect only once on component mount
 
-  if (!hasLoaded) {
+  if (isLoading) {
     return <p>Loading... </p>;
-  } else if (hasLoaded === 1) {
+  } else if (isLoading === 1) {
     return <p>Almost there!</p>;
   }
 
   return (
     <section className="news-feed">
       <header className="news-feed__header">
-        <h2>Section title</h2>
-        <p>Section tagline / description</p>
+        <h2>Top 10 randomly selected </h2>
       </header>
 
       <div className="news-feed__wrapper">
