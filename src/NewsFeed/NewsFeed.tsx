@@ -5,13 +5,8 @@ import NewsCard from "../NewsCard/NewsCard";
 import { NewsFeedStory } from "../types";
 
 function NewsFeed() {
-  /*
-   * change loading message depending on value
-   * 0 - Loading...
-   * 1 - Almost there
-   * 2 - show content
-   */
-  let [isLoading, setLoading] = useState(2);
+  // change loading message depending on progress with fetch
+  let [loadingState, setLoading] = useState<string>("Loading...");
   let [randomStoriesData] = useState<string[]>([]);
   let [randomStoriesContent] = useState<NewsFeedStory[]>([]);
 
@@ -47,7 +42,7 @@ function NewsFeed() {
             return `https://hacker-news.firebaseio.com/v0/item/${storyId}.json`;
           });
 
-          setLoading(1); // let user know something is happening
+          setLoading("Almost there!"); // let user know something is happening
           randomStoriesData = storyUrls;
         },
         (error) => {
@@ -79,7 +74,7 @@ function NewsFeed() {
             a.score < b.score ? 1 : b.score < a.score ? -1 : 0
           );
 
-          setLoading(0);
+          setLoading(""); // clear loading message, when everything is done
         },
         (error) => {
           console.log("Could not sort stories. ", error);
@@ -87,13 +82,9 @@ function NewsFeed() {
       );
   }, []); // Empty dependency array to run effect only once on component mount
 
-  if (isLoading) {
-    return <p>Loading... </p>;
-  } else if (isLoading === 1) {
-    return <p>Almost there!</p>;
-  }
-
-  return (
+  return loadingState.length > 0 ? (
+    <p>{loadingState}</p>
+  ) : (
     <section className="news-feed">
       <header className="news-feed__header">
         <h2>Top 10 randomly selected </h2>
