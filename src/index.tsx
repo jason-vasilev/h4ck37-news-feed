@@ -4,13 +4,13 @@ import NewsFeed from './NewsFeed/NewsFeed';
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
-	<React.StrictMode>
-		<main id="main" className="container">
-			<h1>Main page title</h1>
-			<NewsFeed />
-		</main>
-	</React.StrictMode>,
-	document.getElementById('root')
+  <React.StrictMode>
+    <main id="main" className="container">
+      <h1>h4ck37 news</h1>
+      <NewsFeed />
+    </main>
+  </React.StrictMode>,
+  document.getElementById("root")
 );
 
 // If you want to start measuring performance in your app, pass a function

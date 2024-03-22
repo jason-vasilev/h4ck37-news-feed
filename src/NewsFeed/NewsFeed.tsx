@@ -1,27 +1,18 @@
-import React from 'react';
-import './NewsFeed.scss';
-import NewsCard from '../NewsCard/NewsCard';
+import React, { useState, useEffect } from "react";
+import "./NewsFeed.scss";
+import NewsCard from "../NewsCard/NewsCard";
 
 import { NewsFeedStory } from "../types";
 
-class NewsFeed extends React.Component<
-  {},
-  { randomStories: string[]; hasLoaded: number }
-> {
-  randomStoriesData: string[] = [];
-  randomStoriesContent: NewsFeedStory[] = [];
-  constructor(props: any) {
-    super(props);
+function NewsFeed() {
+  // change loading message depending on progress with fetch
+  let [loadingState, setLoading] = useState<string>("Loading...");
+  let [randomStoriesData] = useState<string[]>([]);
+  let [randomStoriesContent] = useState<NewsFeedStory[]>([]);
 
-    this.state = {
-      randomStories: [],
-      hasLoaded: 0,
-    };
-  }
-
-  /* How to get a number of random elements from an array? */
+  /* Get a number of random elements from an array */
   /* https://stackoverflow.com/a/19270021/1121986 */
-  getRandom(arr: string, n: number) {
+  function getRandom(arr: string[], n: number): string[] {
     const result = new Array(n);
     let len = arr.length;
     const taken = new Array(len);
@@ -38,79 +29,75 @@ class NewsFeed extends React.Component<
     return result;
   }
 
-  componentDidMount() {
+  useEffect(() => {
     /* besides stories, occasionally, there are a poll or two */
     fetch("https://hacker-news.firebaseio.com/v0/topstories.json")
       .then((response) => response.json())
       .then(
         (data) => {
-          this.setState({
-            randomStories: this.getRandom(data, 10),
-            hasLoaded: 1,
+          const randomStoryIds: string[] = getRandom(data, 10); // get an array of 10 story IDs as strings
+
+          // Construct URLs with the randomStoryIds
+          const storyUrls: string[] = randomStoryIds.map((storyId: string) => {
+            return `https://hacker-news.firebaseio.com/v0/item/${storyId}.json`;
           });
 
-          this.randomStoriesData = this.state.randomStories.map(
-            (storyId: string) => {
-              return `https://hacker-news.firebaseio.com/v0/item/${storyId}.json`;
-            }
-          );
+          setLoading("Almost there!"); // let user know something is happening
+          randomStoriesData = storyUrls;
         },
         (error) => {
           console.log("Error! Could not get top stories. ", error);
         }
       )
-      .then((randomStoriesData) => {
-        Object.entries(this.randomStoriesData).forEach((value: string[]) => {
-          fetch(value[1])
+      .then(() => {
+        const promises = randomStoriesData.map((story: string) => {
+          return fetch(story)
             .then((response) => response.json())
             .then(
               (data) => {
-                this.randomStoriesContent.push(data);
+                randomStoriesContent.push(data);
+                return randomStoriesContent;
               },
               (error) => {
-                console.log("Error! Could not get data of stories. ", error);
-              }
-            )
-            .then(
-              (randomStoriesContent) => {
-                this.randomStoriesContent.sort((a, b) =>
-                  a.score < b.score ? 1 : b.score < a.score ? -1 : 0
-                );
-                this.setState({ hasLoaded: 2 });
-              },
-              (error) => {
-                console.log("Could not sort stories. ", error);
+                console.log("Error! Could not collect stories. ", error);
+                return randomStoriesContent; // return as-is
               }
             );
         });
-      });
-  }
 
-  render() {
-    const { hasLoaded } = this.state;
+        return Promise.all(promises); // Wait for all fetch operations to complete
+      })
+      .then(
+        () => {
+          // sort stories by highest score
+          randomStoriesContent.sort((a: NewsFeedStory, b: NewsFeedStory) =>
+            a.score < b.score ? 1 : b.score < a.score ? -1 : 0
+          );
 
-    if (!hasLoaded) {
-      return <p>Loading... </p>;
-    } else if (hasLoaded === 1) {
-      return <p>Almost there!</p>;
-    }
+          setLoading(""); // clear loading message, when everything is done
+        },
+        (error) => {
+          console.log("Could not sort stories. ", error);
+        }
+      );
+  }, []); // Empty dependency array to run effect only once on component mount
 
-    return (
-      <section className="news-feed">
-        <header className="news-feed__header">
-          <h2>Section title</h2>
-          <p>Section tagline / description</p>
-        </header>
+  return loadingState.length > 0 ? (
+    <p>{loadingState}</p>
+  ) : (
+    <section className="news-feed">
+      <header className="news-feed__header">
+        <h2>Top 10 randomly selected </h2>
+      </header>
 
-        <div className="news-feed__wrapper">
-          {this.randomStoriesContent &&
-            this.randomStoriesContent.map((item: NewsFeedStory) => {
-              return <NewsCard key={item.id} cardInfo={item} />;
-            })}
-        </div>
-      </section>
-    );
-  }
+      <div className="news-feed__wrapper">
+        {randomStoriesContent &&
+          randomStoriesContent.map((story: NewsFeedStory) => {
+            return <NewsCard key={story.id} cardInfo={story} />;
+          })}
+      </div>
+    </section>
+  );
 }
 
 export default NewsFeed;
