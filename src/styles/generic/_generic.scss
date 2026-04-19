@@ -7,7 +7,6 @@
 	box-sizing: inherit;
 	margin: 0;
 	padding: 0;
-
 	font-weight: inherit;
 	font-size: inherit;
 }
@@ -24,7 +23,6 @@ body {
 fieldset {
 	margin: 0;
 	padding: 0;
-
 	border: 0;
 }
 
@@ -34,6 +32,6 @@ select,
 label,
 textarea,
 a {
-	-webkit-tap-highlight-color: rgba(0, 0, 0, 0%);
+	-webkit-tap-highlight-color: rgb(0 0 0 / 0%);
 	-webkit-tap-highlight-color: transparent;
 }

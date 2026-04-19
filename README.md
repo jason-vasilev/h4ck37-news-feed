@@ -1,17 +1,18 @@
 ## H4ck37 News Feed
 
-Running on create-react-app with Typescript and SCSS.\
-Preview at [https://h4ck37-news-feed.herokuapp.com/](h4ck37-news-feed.herokuapp.com)
+A small React + TypeScript app that pulls 10 random top stories from the Hacker News API.
 
-`yarn i` - install
+Built with [Vite](https://vitejs.dev/), React 18, TypeScript, and SCSS.
 
-`yarn start` - run in dev mode - opens [http://localhost:3000](http://localhost:3000)
+### Requirements
 
-`yarn test` - Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Node.js 20+ (tested with Node 24)
+- npm 10+
 
-`yarn build` - builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Scripts
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- `npm install` — install dependencies
+- `npm run dev` (or `npm start`) — start the dev server at [http://localhost:3000](http://localhost:3000)
+- `npm run build` — type-check and build for production into `build/`
+- `npm run preview` — preview the production build locally
+- `npm run lint:style` — lint `.scss` files with stylelint
