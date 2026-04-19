@@ -10,7 +10,6 @@
 html {
 	line-height: 1.15; /* 1 */
 	text-size-adjust: 100%; /* 2 */
-	text-size-adjust: 100%; /* 2 */
 }
 
 /* Sections
@@ -80,7 +79,7 @@ main {
 
 pre {
 	font-size: 1em; /* 2 */
-	font-family: monospace, monospace; /* 1 */
+	font-family: monospace; /* 1 */
 }
 
 /* Text-level semantics
@@ -120,7 +119,7 @@ strong {
 code,
 kbd,
 samp {
-	font-family: monospace, monospace; /* 1 */
+	font-family: monospace; /* 1 */
 	font-size: 1em; /* 2 */
 }
 
@@ -213,7 +212,7 @@ button,
 [type="button"],
 [type="reset"],
 [type="submit"] {
-	appearance: button;
+	appearance: auto;
 }
 
 /**
@@ -307,7 +306,7 @@ textarea {
 * Correct the text style of placeholders in Chrome, Edge, and Safari.
 */
 
-::input-placeholder {
+::placeholder {
 	color: inherit;
 	opacity: 0.54;
 }
@@ -326,7 +325,7 @@ textarea {
 */
 
 ::-webkit-file-upload-button {
-	appearance: button; /* 1 */
+	appearance: auto; /* 1 */
 	font: inherit; /* 2 */
 }
 
@@ -376,15 +375,11 @@ dialog {
 	color: black;
 	display: block;
 	height: fit-content;
-	height: fit-content;
-	height: fit-content;
 	left: 0;
 	margin: auto;
 	padding: 1em;
 	position: absolute;
 	right: 0;
-	width: fit-content;
-	width: fit-content;
 	width: fit-content;
 }
 

@@ -48,7 +48,7 @@ h5,
 h6,
 %h6 {
 	font-weight: $font-weight-bold;
-	word-break: break-word;
+	overflow-wrap: break-word;
 }
 
 h1,
