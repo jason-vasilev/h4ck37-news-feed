@@ -1,4 +1,5 @@
 @use 'sass:math';
+@use 'vars' as *;
 
 @function stripUnit($value) {
 	/* @return $value / ($value * 0 + 1); */

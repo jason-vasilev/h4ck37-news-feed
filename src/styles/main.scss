@@ -1,10 +1,10 @@
 /* Main project stylesheet combiner */
 
 /* Generic styling of base elements */
-@import 'generic/normalize';
-@import 'generic/vars';
-@import 'generic/mixins';
-@import 'generic/generic';
-@import 'generic/typography';
-@import 'generic/grid';
-@import 'generic/utilities';
+@forward 'generic/normalize';
+@forward 'generic/vars';
+@forward 'generic/mixins';
+@forward 'generic/generic';
+@forward 'generic/typography';
+@forward 'generic/grid';
+@forward 'generic/utilities';

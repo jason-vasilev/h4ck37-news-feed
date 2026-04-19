@@ -1,4 +1,6 @@
-@import '../styles/main';
+@use '../styles/generic/vars' as *;
+@use '../styles/generic/mixins' as *;
+@use '../styles/generic/utilities' as *;
 
 .news-card {
 	position: relative;
