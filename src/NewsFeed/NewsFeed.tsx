@@ -4,83 +4,72 @@ import NewsCard from "../NewsCard/NewsCard";
 
 import { NewsFeedStory } from "../types";
 
-function NewsFeed() {
-  // change loading message depending on progress with fetch
-  let [loadingState, setLoading] = useState<string>("Loading...");
-  let [randomStoriesData] = useState<string[]>([]);
-  let [randomStoriesContent] = useState<NewsFeedStory[]>([]);
+/* Get a number of random elements from an array */
+/* https://stackoverflow.com/a/19270021/1121986 */
+function getRandom<T>(arr: T[], n: number): T[] {
+  const result = new Array<T>(n);
+  let len = arr.length;
+  const taken = new Array<number>(len);
 
-  /* Get a number of random elements from an array */
-  /* https://stackoverflow.com/a/19270021/1121986 */
-  function getRandom(arr: string[], n: number): string[] {
-    const result = new Array(n);
-    let len = arr.length;
-    const taken = new Array(len);
-
-    if (n > len) {
-      throw new RangeError("getRandom: more elements taken than available");
-    }
-
-    while (n--) {
-      const x = Math.floor(Math.random() * len);
-      result[n] = arr[x in taken ? taken[x] : x];
-      taken[x] = --len in taken ? taken[len] : len;
-    }
-    return result;
+  if (n > len) {
+    throw new RangeError("getRandom: more elements taken than available");
   }
 
+  while (n--) {
+    const x = Math.floor(Math.random() * len);
+    result[n] = arr[x in taken ? taken[x] : x];
+    taken[x] = --len in taken ? taken[len] : len;
+  }
+  return result;
+}
+
+const sortByScoreDesc = (a: NewsFeedStory, b: NewsFeedStory) =>
+  b.score - a.score;
+
+function NewsFeed() {
+  const [loadingState, setLoading] = useState<string>("Loading...");
+  const [stories, setStories] = useState<NewsFeedStory[]>([]);
+
   useEffect(() => {
-    /* besides stories, occasionally, there are a poll or two */
-    fetch("https://hacker-news.firebaseio.com/v0/topstories.json")
-      .then((response) => response.json())
-      .then(
-        (data) => {
-          const randomStoryIds: string[] = getRandom(data, 10); // get an array of 10 story IDs as strings
+    const controller = new AbortController();
+    const { signal } = controller;
 
-          // Construct URLs with the randomStoryIds
-          const storyUrls: string[] = randomStoryIds.map((storyId: string) => {
-            return `https://hacker-news.firebaseio.com/v0/item/${storyId}.json`;
-          });
+    const run = async () => {
+      try {
+        const topRes = await fetch(
+          "https://hacker-news.firebaseio.com/v0/topstories.json",
+          { signal }
+        );
+        const topIds: number[] = await topRes.json();
 
-          setLoading("Almost there!"); // let user know something is happening
-          randomStoriesData = storyUrls;
-        },
-        (error) => {
-          console.log("Error! Could not get top stories. ", error);
-        }
-      )
-      .then(() => {
-        const promises = randomStoriesData.map((story: string) => {
-          return fetch(story)
-            .then((response) => response.json())
-            .then(
-              (data) => {
-                randomStoriesContent.push(data);
-                return randomStoriesContent;
-              },
-              (error) => {
-                console.log("Error! Could not collect stories. ", error);
-                return randomStoriesContent; // return as-is
-              }
-            );
-        });
+        const randomStoryIds = getRandom(topIds, 10);
 
-        return Promise.all(promises); // Wait for all fetch operations to complete
-      })
-      .then(
-        () => {
-          // sort stories by highest score
-          randomStoriesContent.sort((a: NewsFeedStory, b: NewsFeedStory) =>
-            a.score < b.score ? 1 : b.score < a.score ? -1 : 0
-          );
+        setLoading("Almost there!");
 
-          setLoading(""); // clear loading message, when everything is done
-        },
-        (error) => {
-          console.log("Could not sort stories. ", error);
-        }
-      );
-  }, []); // Empty dependency array to run effect only once on component mount
+        const storyResponses = await Promise.all(
+          randomStoryIds.map((id) =>
+            fetch(`https://hacker-news.firebaseio.com/v0/item/${id}.json`, {
+              signal,
+            }).then((r) => r.json() as Promise<NewsFeedStory>)
+          )
+        );
+
+        if (signal.aborted) return;
+
+        const sorted = [...storyResponses].sort(sortByScoreDesc);
+
+        setStories(sorted);
+        setLoading("");
+      } catch (error) {
+        if ((error as Error).name === "AbortError") return;
+        console.log("Error! Could not load stories. ", error);
+      }
+    };
+
+    run();
+
+    return () => controller.abort();
+  }, []);
 
   return loadingState.length > 0 ? (
     <p>{loadingState}</p>
@@ -91,10 +80,9 @@ function NewsFeed() {
       </header>
 
       <div className="news-feed__wrapper">
-        {randomStoriesContent &&
-          randomStoriesContent.map((story: NewsFeedStory) => {
-            return <NewsCard key={story.id} cardInfo={story} />;
-          })}
+        {stories.map((story) => (
+          <NewsCard key={story.id} cardInfo={story} />
+        ))}
       </div>
     </section>
   );
