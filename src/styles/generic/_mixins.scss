@@ -1,16 +1,17 @@
 @use 'sass:math';
+@use 'vars' as *;
 
-@function stripUnit($value) {
+@function strip-unit($value) {
 	/* @return $value / ($value * 0 + 1); */
 	@return math.div($value, $value * 0 + 1);
 }
 
 /* px to rem */
 @function rem($pxValue) {
-	@return #{calc(stripUnit($pxValue) / stripUnit($base-font-size))}rem;
+	@return #{calc(strip-unit($pxValue) / strip-unit($base-font-size))}rem;
 }
 
 /* get em value from px for line-height and font-size */
 @function em($pixels, $context: $base-font-size) {
-	@return #{calc(stripUnit($pixels) / stripUnit($context))}em;
+	@return #{calc(strip-unit($pixels) / strip-unit($context))}em;
 }

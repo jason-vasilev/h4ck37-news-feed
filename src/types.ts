@@ -7,6 +7,7 @@ export interface NewsFeedStory {
   type: string;
   id: number;
   by: string;
+  url?: string;
 }
 
 interface Kid {

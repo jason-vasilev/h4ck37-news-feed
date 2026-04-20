@@ -1,116 +1,91 @@
-import React from 'react';
-import './NewsFeed.scss';
-import NewsCard from '../NewsCard/NewsCard';
+import React, { useState, useEffect } from "react";
+import "./NewsFeed.scss";
+import NewsCard from "../NewsCard/NewsCard";
 
 import { NewsFeedStory } from "../types";
 
-class NewsFeed extends React.Component<
-  {},
-  { randomStories: string[]; hasLoaded: number }
-> {
-  randomStoriesData: string[] = [];
-  randomStoriesContent: NewsFeedStory[] = [];
-  constructor(props: any) {
-    super(props);
+/* Get a number of random elements from an array */
+/* https://stackoverflow.com/a/19270021/1121986 */
+function getRandom<T>(arr: T[], n: number): T[] {
+  const result = new Array<T>(n);
+  let len = arr.length;
+  const taken = new Array<number>(len);
 
-    this.state = {
-      randomStories: [],
-      hasLoaded: 0,
+  if (n > len) {
+    throw new RangeError("getRandom: more elements taken than available");
+  }
+
+  while (n--) {
+    const x = Math.floor(Math.random() * len);
+    result[n] = arr[x in taken ? taken[x] : x];
+    taken[x] = --len in taken ? taken[len] : len;
+  }
+  return result;
+}
+
+const sortByScoreDesc = (a: NewsFeedStory, b: NewsFeedStory) =>
+  b.score - a.score;
+
+function NewsFeed() {
+  const [loadingState, setLoading] = useState<string>("Loading...");
+  const [stories, setStories] = useState<NewsFeedStory[]>([]);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const { signal } = controller;
+
+    const run = async () => {
+      try {
+        const topRes = await fetch(
+          "https://hacker-news.firebaseio.com/v0/topstories.json",
+          { signal }
+        );
+        const topIds: number[] = await topRes.json();
+
+        const randomStoryIds = getRandom(topIds, 10);
+
+        setLoading("Almost there!");
+
+        const storyResponses = await Promise.all(
+          randomStoryIds.map((id) =>
+            fetch(`https://hacker-news.firebaseio.com/v0/item/${id}.json`, {
+              signal,
+            }).then((r) => r.json() as Promise<NewsFeedStory>)
+          )
+        );
+
+        if (signal.aborted) return;
+
+        const sorted = [...storyResponses].sort(sortByScoreDesc);
+
+        setStories(sorted);
+        setLoading("");
+      } catch (error) {
+        if ((error as Error).name === "AbortError") return;
+        console.log("Error! Could not load stories. ", error);
+      }
     };
-  }
 
-  /* How to get a number of random elements from an array? */
-  /* https://stackoverflow.com/a/19270021/1121986 */
-  getRandom(arr: string, n: number) {
-    const result = new Array(n);
-    let len = arr.length;
-    const taken = new Array(len);
+    run();
 
-    if (n > len) {
-      throw new RangeError("getRandom: more elements taken than available");
-    }
+    return () => controller.abort();
+  }, []);
 
-    while (n--) {
-      const x = Math.floor(Math.random() * len);
-      result[n] = arr[x in taken ? taken[x] : x];
-      taken[x] = --len in taken ? taken[len] : len;
-    }
-    return result;
-  }
+  return loadingState.length > 0 ? (
+    <p>{loadingState}</p>
+  ) : (
+    <section className="news-feed">
+      <header className="news-feed__header">
+        <h2>Top 10 randomly selected </h2>
+      </header>
 
-  componentDidMount() {
-    /* besides stories, occasionally, there are a poll or two */
-    fetch("https://hacker-news.firebaseio.com/v0/topstories.json")
-      .then((response) => response.json())
-      .then(
-        (data) => {
-          this.setState({
-            randomStories: this.getRandom(data, 10),
-            hasLoaded: 1,
-          });
-
-          this.randomStoriesData = this.state.randomStories.map(
-            (storyId: string) => {
-              return `https://hacker-news.firebaseio.com/v0/item/${storyId}.json`;
-            }
-          );
-        },
-        (error) => {
-          console.log("Error! Could not get top stories. ", error);
-        }
-      )
-      .then((randomStoriesData) => {
-        Object.entries(this.randomStoriesData).forEach((value: string[]) => {
-          fetch(value[1])
-            .then((response) => response.json())
-            .then(
-              (data) => {
-                this.randomStoriesContent.push(data);
-              },
-              (error) => {
-                console.log("Error! Could not get data of stories. ", error);
-              }
-            )
-            .then(
-              (randomStoriesContent) => {
-                this.randomStoriesContent.sort((a, b) =>
-                  a.score < b.score ? 1 : b.score < a.score ? -1 : 0
-                );
-                this.setState({ hasLoaded: 2 });
-              },
-              (error) => {
-                console.log("Could not sort stories. ", error);
-              }
-            );
-        });
-      });
-  }
-
-  render() {
-    const { hasLoaded } = this.state;
-
-    if (!hasLoaded) {
-      return <p>Loading... </p>;
-    } else if (hasLoaded === 1) {
-      return <p>Almost there!</p>;
-    }
-
-    return (
-      <section className="news-feed">
-        <header className="news-feed__header">
-          <h2>Section title</h2>
-          <p>Section tagline / description</p>
-        </header>
-
-        <div className="news-feed__wrapper">
-          {this.randomStoriesContent &&
-            this.randomStoriesContent.map((item: NewsFeedStory) => {
-              return <NewsCard key={item.id} cardInfo={item} />;
-            })}
-        </div>
-      </section>
-    );
-  }
+      <div className="news-feed__wrapper">
+        {stories.map((story) => (
+          <NewsCard key={story.id} cardInfo={story} />
+        ))}
+      </div>
+    </section>
+  );
 }
 
 export default NewsFeed;

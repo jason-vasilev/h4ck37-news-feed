@@ -1,60 +1,77 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import "./NewsCard.scss";
 
 import { NewsFeedStory } from "../types";
 
+const timeSince = (postTime: number): string => {
+  const unixTimeNow = Math.round(Date.now() / 1000);
+  const timeDiff = unixTimeNow - postTime; /* in seconds */
 
-function NewsCard(props: any) {
-  const { cardInfo } = props;
+  const days = Math.floor(timeDiff / (60 * 60 * 24));
+  const hours = Math.floor((timeDiff / (60 * 60)) % 24);
+  const minutes = Math.floor((timeDiff / 60) % 60);
 
-  const [authorKarma, setAuthorKarma] = useState("");
+  if (days > 1) {
+    return `${days} days ago`;
+  } else if (days > 0) {
+    return `${days} day ago`;
+  }
 
-  const timeSince = (postTime: number) => {
-    var unixTimeNow = Math.round(Date.now() / 1000);
-    const timeDiff = unixTimeNow - postTime; /* in seconds */
+  if (hours > 0) {
+    return `${hours} hours ago`;
+  }
 
-    const days = Math.floor(timeDiff / (60 * 60 * 24));
-    const hours = Math.floor((timeDiff / (60 * 60)) % 24);
-    const minutes = Math.floor((timeDiff / 60) % 60);
+  if (minutes > 5) {
+    return `${minutes} minutes ago`;
+  } else {
+    return ` just few minutes ago`;
+  }
+};
 
-    if (days > 1) {
-      return `${days} days ago`;
-    } else if (days > 0) {
-      return `${days} day ago`;
-    }
+/* for the sake of having different images */
+const imageId = (id: number): string => {
+  const idLength = String(id).length;
+  return String(id)[idLength - 1];
+};
 
-    if (hours > 0) {
-      return `${hours} hours ago`;
-    }
+interface NewsCardProps {
+  cardInfo: NewsFeedStory;
+}
 
-    if (minutes > 5) {
-      return `${minutes} minutes ago`;
-    } else {
-      return ` just few minutes ago`;
-    }
-  };
+function NewsCard({ cardInfo }: NewsCardProps) {
+  const [authorKarma, setAuthorKarma] = useState<string | null>(null);
+  const hasFetchedKarma = useRef(false);
+  const abortRef = useRef<AbortController | null>(null);
 
-  /* for the sake of having different images */
-  const imageId = (id: number) => {
-    const idLength = String(id).length;
-    return String(id)[idLength - 1];
-  };
+  const timeAgo = useMemo(() => timeSince(cardInfo.time), [cardInfo.time]);
 
-  const timeAgo = timeSince(cardInfo.time);
+  useEffect(() => {
+    return () => abortRef.current?.abort();
+  }, []);
 
-  /* get author karma points on author link hover */
-  const getKarmaPoints = () => {
-    fetch(`https://hacker-news.firebaseio.com/v0/user/${cardInfo.by}.json`)
+  /* get author karma points on author link hover, only once per card */
+  const getKarmaPoints = useCallback(() => {
+    if (hasFetchedKarma.current) return;
+    hasFetchedKarma.current = true;
+
+    const controller = new AbortController();
+    abortRef.current = controller;
+
+    fetch(`https://hacker-news.firebaseio.com/v0/user/${cardInfo.by}.json`, {
+      signal: controller.signal,
+    })
       .then((response) => response.json())
       .then(
         (data) => {
           setAuthorKarma(`${data.karma} karma`);
         },
         (error) => {
+          if ((error as Error).name === "AbortError") return;
+          hasFetchedKarma.current = false; // allow retry on real failure
           console.log("Could not get author karma points", error);
         }
       );
-  };
+  }, [cardInfo.by]);
 
   return (
     <div className="news-card">
@@ -118,7 +135,7 @@ function NewsCard(props: any) {
                 href={`https://news.ycombinator.com/user?id=${cardInfo.by}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                title={authorKarma}
+                title={authorKarma ?? undefined}
                 className="news-card__author-link"
                 onMouseOver={getKarmaPoints}
                 onFocus={getKarmaPoints}

@@ -1,4 +1,4 @@
-@import '../styles/main';
+@use '../styles/generic/mixins' as *;
 
 .news-feed {
 	&__header {
